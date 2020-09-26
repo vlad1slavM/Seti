@@ -1,0 +1,64 @@
+<html>
+<head>
+</head>
+<body>
+  <h1>ДЗ-1</h1>
+  <h1>Шаг #1 (из множества)</h1>
+Отправьте POST-запрос по адресу <code>/mUHHSBRKluN5PH</code>
+<br />
+<br />
+В запросе должны быть выставлены cookie:
+<table border="1">
+  <tr><th>Ключ</th><th>Значение</th></tr>
+  <tr>
+    <td><code>XWp6f6JfUTahO</code></td>
+    <td><code>UУвnиТчEУ34лБTБmлпеXvыaШv6Оо1</code></td>
+  </tr>
+  <tr>
+    <td><code>Bc219JJxMU268Y</code></td>
+    <td><code>нЬ6МтМZНRкDАsхAxоEъCaЛйиЬъдI</code></td>
+  </tr>
+  <tr>
+    <td><code>2hLKnBQRDtAdIV</code></td>
+    <td><code>ЯРУюсЫmvNЪrшDаДЛщЛЯцoЯшt</code></td>
+  </tr>
+  <tr>
+    <td><code>4yVdHea0XClx9</code></td>
+    <td><code>фкблёxbZшкooBaЕЕjСГлюesУlVbЦЕЖиДАyсКFn6zrТЯ</code></td>
+  </tr>
+  <tr>
+    <td><code>zF27pjZ1SMy3Ac</code></td>
+    <td><code>EРWfEnПaлqwуSnЁуСQiсыАБпgЮъГЙэVчиаzhФБмкP</code></td>
+  </tr>
+</table>
+<br />
+Запрос должен иметь следующие данные формы:
+<table border="1">
+  <tr><th>Ключ</th><th>Значение</th></tr>
+  <tr>
+    <td><code>iRBO7cFkZoyg</code></td>
+    <td><code>bZ3йФQшvДcЗkwнецAXrzвsуУЕьnH</code></td>
+  </tr>
+  <tr>
+    <td><code>bPDaA2XMxcrJ8</code></td>
+    <td><code>цTЪ3sчPNjТeЖЫDJYGuГЙoEuucцжЭy</code></td>
+  </tr>
+  <tr>
+    <td><code>FltR6AGFlV3KaDM</code></td>
+    <td><code>ХСe8ЗRГЁLPM5tn3DулaшoIjFеAzlSlLUI</code></td>
+  </tr>
+  <tr>
+    <td><code>X2DwJNqLlXmnSMt1</code></td>
+    <td><code>ЪеМYz2дYEЙafzукыelBSСAлKQкMшгoиLфkЁLMTfvл1Ыбядч</code></td>
+  </tr>
+  <tr>
+    <td><code>jG7avmBxkw2kaik</code></td>
+    <td><code>iIлkЦOBXНzvYфГбYбЩ4iкTkЭa6эp6ъZ</code></td>
+  </tr>
+  <tr>
+    <td><code>9llsJuboxYzNzV</code></td>
+    <td><code>оYДТEIпЛrЙАв1ИVEKtbЬotоЦеRo8</code></td>
+  </tr>
+</table>
+</body>
+</html>
