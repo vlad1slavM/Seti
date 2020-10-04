@@ -4,16 +4,16 @@ import re
 
 
 class Regulars:
-    link = re.compile(r'по адресу <code>/(.+?)</code>'
-                      r'|Перейдите по <a href=\"/(.+?)\"')
+    link = re.compile(r'<code>/(.+?)</code>|<a href=\"/(.+?)\"')
     task = re.compile(r'POST|GET|Загрузите|Перейдите')
     keys = re.compile(r'<code>(.+?)</code>')
-    cookie = re.compile(r'cookie:(.+?)</table>')
-    header = re.compile(r'загаловки:(.+?)</table>')
-    data = re.compile('формы:(.+?)</table>')
+    cookie = re.compile(r'cookie(.+?)</table>')
+    header = re.compile(r'заголовки(.+?)</table>')
+    data = re.compile('формы(.+?)</table>')
     params = re.compile(
         r'параметры запроса, указанные в таблице:(.+?)</table>')
-    link_go_over = re.compile(r'<a> href="(.+?)"')
+    number = re.compile(r'Шаг #(.+?)')
+    link_go_over = re.compile(r"href=['\"](.+?)['\"]>")
 
 
 class GetPost:
@@ -21,16 +21,16 @@ class GetPost:
         self.data = {}
         self.task = []
         self.link = []
-        self.link_go_over = []
         self.dict_cookie = {}
         self.dict_header = {}
         self.dict_data = {}
         self.dict_params = {}
+        self.link_go_over = []
 
     @staticmethod
-    def parser(text, regular):
+    def parser(text, keyword):
         result = {}
-        raw_cookie = regular.findall(text, re.DOTALL)
+        raw_cookie = re.findall(rf"{keyword}(.+?)</table>", text, re.DOTALL)
         if not raw_cookie:
             return None
         else:
@@ -39,8 +39,7 @@ class GetPost:
                 result[head_list[i]] = head_list[i + 1]
         return result
 
-    @staticmethod
-    def parser_cookie(text):
+    def parser_cookie(self, text):
         result = {'user': '4a0c8246d4578d06fd5aa2dac540e7e4'}
         raw_cookie = re.findall(r"cookie:(.+?)</table>", text, re.DOTALL)
         if not raw_cookie:
@@ -49,14 +48,17 @@ class GetPost:
             head_list = re.findall(r"<code>(.+?)</code>", raw_cookie[0])
             for i in range(0, len(head_list) - 1, 2):
                 req = re.compile('[а-яА-Я]]')
-                result[head_list[i]] = req.sub('', head_list[i + 1])
+                cookie = req.sub('', head_list[i + 1])
+                result[head_list[i]] = cookie
         return result
 
-    def get_data(self):
+    def get_data(self, url):
         data = {}
-        url = 'http://hw1.alexbers.com/'
         cookies = {'user': '4a0c8246d4578d06fd5aa2dac540e7e4'}
         r = requests.get(url, cookies=cookies)
+
+        with open('site.txt', 'a', encoding='UTF-8') as file:
+            file.write(r.text)
         task_local = re.findall(Regulars.task, r.text)
         link_local = re.findall(Regulars.link, r.text)
         keys_local = re.findall(Regulars.keys, r.text)
@@ -73,13 +75,13 @@ class GetPost:
         self.task = task_local
         self.link = link_local
         self.link_go_over = link_go_over_local
-        self.dict_cookie = GetPost.parser_cookie(r.text)
-        self.dict_data = GetPost.parser(r.text, Regulars.data)
-        self.dict_header = GetPost.parser(r.text, Regulars.header)
-        self.dict_params = GetPost.parser(r.text, Regulars.params)
+        self.dict_cookie = GetPost.parser_cookie(self, r.text)
+        self.dict_data = GetPost.parser(r.text, "формы")
+        self.dict_header = GetPost.parser(r.text, 'заголовки')
+        self.dict_params = GetPost.parser(r.text, "параметры")
+        GetPost.decide_task(self)
 
     def decide_task(self):
-        GetPost.get_data(self)
         if self.task[0] == "GET":
             print("get")
             GetPost.get_request(self)
@@ -95,37 +97,38 @@ class GetPost:
             url = 'http://hw1.alexbers.com/' + str(self.link[0][1])
         else:
             url = 'http://hw1.alexbers.com/' + str(self.link[0][0])
-        print(url)
-        s = requests.post(url, data=self.dict_data,
-                          cookies=self.dict_cookie,
+        s = requests.post(url, data=self.dict_data, cookies=self.dict_cookie,
                           params=self.dict_params, headers=self.dict_header)
-        #print(s.text)
+        print(url)
+        print(re.findall(Regulars.number, s.text))
+        print(str(self.dict_data) + '\n' + str(self.dict_cookie) + '\n' + str(
+            self.dict_params) + '\n' + str(self.dict_header))
+        GetPost().get_data(url)
 
     def get_request(self):
         if self.link[0][0] == '':
             url = 'http://hw1.alexbers.com/' + str(self.link[0][1])
         else:
             url = 'http://hw1.alexbers.com/' + str(self.link[0][0])
-        print(url)
-        s = requests.get(url, data=self.dict_data,
-                         cookies=self.dict_cookie,
-                         params=self.dict_params, headers=self.dict_header)
-        #print(s.text)
-
-    def go_over_request(self):
-        url = str(self.link_go_over[0])
-        print(url)
         s = requests.get(url, data=self.dict_data, cookies=self.dict_cookie,
                          params=self.dict_params, headers=self.dict_header)
-        #print(s.text)
+        print(url)
+        print(str(self.dict_data) + '\n' + str(self.dict_cookie) + '\n' + str(
+            self.dict_params) + '\n' + str(self.dict_header))
+        print(re.findall(Regulars.number, s.text))
+        GetPost().get_data(url)
 
-    def download_request(self):
-        url = str(self.link)
+    def go_over_request(self):
+        url = 'http://hw1.alexbers.com' + str(self.link_go_over[0])
+        s = requests.get(url, data=self.dict_data, cookies=self.dict_cookie,
+                         params=self.dict_params, headers=self.dict_header)
+        print(url)
+        print(str(self.dict_data) + '\n' + str(self.dict_cookie) + '\n' + str(
+            self.dict_params) + '\n' + str(self.dict_header))
+        print(re.findall(Regulars.number, s.text))
+        GetPost().get_data(url)
 
-        s = requests.post(url, data=self.dict_data, cookies=self.dict_cookie,
-                          params=self.dict_params, headers=self.dict_header)
-        #print(s.text)
 
 
 if __name__ == '__main__':
-    GetPost().decide_task()
+    GetPost().get_data('http://hw1.alexbers.com/')
